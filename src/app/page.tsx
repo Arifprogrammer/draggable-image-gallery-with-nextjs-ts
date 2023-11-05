@@ -26,6 +26,7 @@ interface ImageItem {
 }
 
 const imagesArray: ImageItem[] = [
+  // All images with their order/id
   {
     image: image_1,
     order: 1,
@@ -75,19 +76,22 @@ const imagesArray: ImageItem[] = [
 export default function ImageGallery() {
   //* useState hooks
   const [images, setImages] = useState<ImageItem[]>(imagesArray);
-  const [activeHover, setActiveHover] = useState<boolean>(false);
-  const [selectedId, setSelectedId] = useState<number[]>([]);
+  const [activeHover, setActiveHover] = useState<boolean>(false); // hover div will be active when a user hovers on an image and deactivates when dragging or hovering out.
+  const [selectedId, setSelectedId] = useState<number[]>([]); // Orders/IDs of selected images are collected in this array.
 
   const imagesId: number[] = useMemo(
+    // Creates an array of all image order IDs for SortableContext.
     () => images.map((img) => img.order),
     [images]
   );
 
   const onDragMove = () => {
+    // Deactivate the hover div while dragging.
     setActiveHover(false);
   };
 
   const onDragEnd = (e: DragEndEvent) => {
+    // Sorting images when dragging ends.
     const { active, over } = e;
     if (active.id === over?.id) {
       return;
@@ -101,6 +105,7 @@ export default function ImageGallery() {
   };
 
   const handleDeleteImage = () => {
+    // Delete selected images.
     const deleteImages = images.filter(
       ({ order }) => order !== selectedId.find((id) => id === order)
     );
@@ -109,6 +114,7 @@ export default function ImageGallery() {
   };
 
   const handleChecked = (order: number) => {
+    // Determine which images are checked or not.
     if (selectedId.includes(order)) {
       const deleteId = selectedId.filter((id) => id !== order);
       setSelectedId(deleteId);

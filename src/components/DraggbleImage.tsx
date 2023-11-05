@@ -26,23 +26,26 @@ export const DraggbleImage = ({
   selectedId,
 }: DraggbleImageProps) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: order });
+    useSortable({ id: order }); // Use the sortable hook to manage dragging behavior.
 
   const style = {
+    // Convert transform to a string for styling.
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
   //* useState hooks
-  const [hoverCurrentElement, setHoverCurrentElement] = useState<number>(0);
+  const [hoverCurrentElement, setHoverCurrentElement] = useState<number>(0); // checks which images are hovered becacuse sending the activeHover data from parent it shows all images are hoverred while hover on a single image and we have to initialize activeHover state on parent because we want to de-activate activeHover onDragMove event handler
 
   const handleMouseEnter = (order: number) => {
+    // Function to handle mouse enter and activate the hover div.
     const currentElementOrder = order;
     setHoverCurrentElement(currentElementOrder);
     setActiveHover(true);
   };
 
   const handleMouseLeave = () => {
+    // Function to handle mouse leave and deactivate the hover div.
     setActiveHover(false);
     setHoverCurrentElement(0);
   };
@@ -78,7 +81,7 @@ export const DraggbleImage = ({
             } ${selectedId.includes(order) ? "opacity-30 z-10" : ""} `}
           ></div>
         </div>
-        <input
+        <input // This input element is placed outside - Refer to Readme.md for details.
           type="checkbox"
           name="select"
           onChange={() => handleChecked(order)}
