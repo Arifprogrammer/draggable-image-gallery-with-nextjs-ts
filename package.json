@@ -1,5 +1,5 @@
 {
-  "name": "draggable-image-gallery-with-nextjs-ts",
+  "name": "image-gallery",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,19 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/sortable": "^7.0.2",
+    "@dnd-kit/utilities": "^3.2.1",
+    "next": "14.0.1",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.0.1"
+    "sharp": "^0.32.6"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.1",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.0.1"
+    "typescript": "^5"
   }
 }

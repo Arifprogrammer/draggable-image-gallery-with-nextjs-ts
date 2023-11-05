@@ -1,113 +1,170 @@
-import Image from 'next/image'
+"use client";
+import image_1 from "@/assets/images/image-1.webp";
+import image_2 from "@/assets/images/image-2.webp";
+import image_3 from "@/assets/images/image-3.webp";
+import image_4 from "@/assets/images/image-4.webp";
+import image_5 from "@/assets/images/image-5.webp";
+import image_6 from "@/assets/images/image-6.webp";
+import image_7 from "@/assets/images/image-7.webp";
+import image_8 from "@/assets/images/image-8.webp";
+import image_9 from "@/assets/images/image-9.webp";
+import image_10 from "@/assets/images/image-10.webp";
+import image_11 from "@/assets/images/image-11.webp";
+import image_icon from "@/assets/images/image-icon.png";
 
-export default function Home() {
+import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
+import { useMemo, useState } from "react";
+import { DraggbleImage } from "@/components/DraggbleImage";
+import Image from "next/image";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+
+//* TS
+interface ImageItem {
+  image: string | StaticImport;
+  order: number;
+}
+
+const imagesArray: ImageItem[] = [
+  {
+    image: image_1,
+    order: 1,
+  },
+  {
+    image: image_2,
+    order: 2,
+  },
+  {
+    image: image_3,
+    order: 3,
+  },
+  {
+    image: image_4,
+    order: 4,
+  },
+  {
+    image: image_5,
+    order: 5,
+  },
+  {
+    image: image_6,
+    order: 6,
+  },
+  {
+    image: image_7,
+    order: 7,
+  },
+  {
+    image: image_8,
+    order: 8,
+  },
+  {
+    image: image_9,
+    order: 9,
+  },
+  {
+    image: image_10,
+    order: 10,
+  },
+  {
+    image: image_11,
+    order: 11,
+  },
+];
+
+export default function ImageGallery() {
+  //* useState hooks
+  const [images, setImages] = useState<ImageItem[]>(imagesArray);
+  const [activeHover, setActiveHover] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<number[]>([]);
+
+  const imagesId: number[] = useMemo(
+    () => images.map((img) => img.order),
+    [images]
+  );
+
+  const onDragMove = () => {
+    setActiveHover(false);
+  };
+
+  const onDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (active.id === over?.id) {
+      return;
+    }
+
+    setImages((image) => {
+      const oldIndex = image.findIndex((img) => img.order === active.id);
+      const newIndex = image.findIndex((img) => img.order === over?.id);
+      return arrayMove(image, oldIndex, newIndex);
+    });
+  };
+
+  const handleDeleteImage = () => {
+    const deleteImages = images.filter(
+      ({ order }) => order !== selectedId.find((id) => id === order)
+    );
+    setImages(deleteImages);
+    setSelectedId([]);
+  };
+
+  const handleChecked = (order: number) => {
+    if (selectedId.includes(order)) {
+      const deleteId = selectedId.filter((id) => id !== order);
+      setSelectedId(deleteId);
+    } else setSelectedId([...selectedId, order]);
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="py-16 px-5 md:px-0 md:py-8 min-h-screen flex justify-center items-center container mx-auto">
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragMove={onDragMove}
+        onDragEnd={onDragEnd}
+      >
+        <div className="rounded-lg shadow-xl shadow-black bg-slate-600 overflow-hidden">
+          <div className="py-5 px-6 lg:px-10 flex justify-between items-center border-b-2 border-white">
+            {selectedId.length > 0 ? (
+              <div className="flex items-center gap-3 md:gap-5">
+                <input type="checkbox" checked />
+                <p className="md:text-2xl font-semibold">
+                  {selectedId.length} Files Selected
+                </p>
+              </div>
+            ) : (
+              <p className="text-3xl font-bold font-serif">Gallery</p>
+            )}
+            {selectedId.length > 0 && (
+              <button
+                className="md:text-xl text-red-400 font-semibold hover:underline"
+                onClick={handleDeleteImage}
+              >
+                {selectedId.length > 1 ? "Delete Files" : "Delete File"}
+              </button>
+            )}
+          </div>
+          <div className="gallery-container p-6 lg:p-10">
+            <SortableContext items={imagesId}>
+              {images.map(({ image, order }, index) => (
+                <DraggbleImage
+                  key={order}
+                  image={image}
+                  order={order}
+                  index={index}
+                  handleChecked={handleChecked}
+                  activeHover={activeHover}
+                  setActiveHover={setActiveHover}
+                  selectedId={selectedId}
+                />
+              ))}
+            </SortableContext>
+            <div className="max-[519px]:py-32 sm:py-0 border-2 border-dashed rounded-lg flex flex-col justify-center items-center gap-y-3 cursor-pointer">
+              <Image src={image_icon} alt="image_icon" height={40} width={40} />
+              <p>Add Images</p>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      </DndContext>
     </main>
-  )
+  );
 }
