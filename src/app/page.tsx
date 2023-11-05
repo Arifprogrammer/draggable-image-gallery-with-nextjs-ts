@@ -158,7 +158,7 @@ export default function ImageGallery() {
                 />
               ))}
             </SortableContext>
-            <div className="max-[519px]:py-32 sm:py-0 border-2 border-dashed rounded-lg flex flex-col justify-center items-center gap-y-3 cursor-pointer">
+            <div className="max-[519px]:py-32 max-[639px]:py-12 sm:py-16 border-2 border-dashed rounded-lg flex flex-col justify-center items-center gap-y-3 cursor-pointer h-full">
               <Image src={image_icon} alt="image_icon" height={40} width={40} />
               <p>Add Images</p>
             </div>

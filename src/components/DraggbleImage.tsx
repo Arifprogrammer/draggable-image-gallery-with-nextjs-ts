@@ -50,14 +50,16 @@ export const DraggbleImage = ({
   return (
     <>
       <div
-        className={`relative ${index === 0 && "md:col-span-2 md:row-span-2"}`}
+        className={`relative ${
+          index === 0 && "md:col-span-2 md:row-span-2"
+        } border-2 border-white rounded-lg h-max`}
       >
         <div
           style={style}
           ref={setNodeRef}
           {...attributes}
           {...listeners}
-          className={`bg-white border-2 border-white rounded-lg overflow-hidden cursor-grab relative`}
+          className={`bg-white rounded-lg overflow-hidden cursor-grab relative`}
           onMouseEnter={() => handleMouseEnter(order)}
           onMouseLeave={handleMouseLeave}
         >
