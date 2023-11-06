@@ -29,6 +29,7 @@ export const DraggbleImage = ({
     useSortable({ id: order }); // Use the sortable hook to manage dragging behavior.
 
   const style = {
+    // Style is imported from @dnd-kit/utilities package
     // Convert transform to a string for styling.
     transform: CSS.Transform.toString(transform),
     transition,

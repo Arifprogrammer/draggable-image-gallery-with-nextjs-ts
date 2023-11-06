@@ -75,8 +75,8 @@ const imagesArray: ImageItem[] = [
 
 export default function ImageGallery() {
   //* useState hooks
-  const [images, setImages] = useState<ImageItem[]>(imagesArray);
-  const [activeHover, setActiveHover] = useState<boolean>(false); // hover div will be active when a user hovers on an image and deactivates when dragging or hovering out.
+  const [images, setImages] = useState<ImageItem[]>(imagesArray); // all images are put here as initial value
+  const [activeHover, setActiveHover] = useState<boolean>(false); // hover div will be active when a user hovers on an image and deactive when dragging or hovering out. We have to initialize activeHover state in parent/here because we want to de-activate activeHover onDragMove event handler.
   const [selectedId, setSelectedId] = useState<number[]>([]); // Orders/IDs of selected images are collected in this array.
 
   const imagesId: number[] = useMemo(
@@ -100,7 +100,7 @@ export default function ImageGallery() {
     setImages((image) => {
       const oldIndex = image.findIndex((img) => img.order === active.id);
       const newIndex = image.findIndex((img) => img.order === over?.id);
-      return arrayMove(image, oldIndex, newIndex);
+      return arrayMove(image, oldIndex, newIndex); // arrayMove is imported from @dnd-kit/sortable package
     });
   };
 
@@ -123,7 +123,7 @@ export default function ImageGallery() {
 
   return (
     <main className="py-16 px-5 md:px-0 md:py-8 min-h-screen flex justify-center items-center container mx-auto">
-      <DndContext
+      <DndContext // DndContext is imported from @dnd-kit/core package
         collisionDetection={closestCenter}
         onDragMove={onDragMove}
         onDragEnd={onDragEnd}
@@ -151,6 +151,8 @@ export default function ImageGallery() {
           </div>
           <div className="gallery-container p-6 lg:p-10">
             <SortableContext items={imagesId}>
+              {" "}
+              {/* arraySortableContext is imported from @dnd-kit/sortable package */}
               {images.map(({ image, order }, index) => (
                 <DraggbleImage
                   key={order}

@@ -36,6 +36,11 @@ _Other Solutions_ -
 - [Link -2](https://github.com/clauderic/dnd-kit/issues/913)
 - [Link -3](https://github.com/clauderic/dnd-kit/issues/1085)
 
+## TODO:
+
+- Implement add image functionality.
+- Fixed the issue of checkbox which is not draggable while checked.
+
 ## Getting Started
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
